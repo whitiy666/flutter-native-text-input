@@ -261,9 +261,16 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
         } else if (call.method == "unfocus") {
             editText.clearFocus()
             hideKeyboard()
-        } else if (call.method == "setText") {
+        }
+//        else if (call.method == "setText") {
+//            val text = call.argument<String>("text")
+//            editText.setText(text)
+//        }
+        else if (call.method == "setText") {
             val text = call.argument<String>("text")
-            editText.setText(text)
+            if (text != editText.text.toString()) {
+                editText.setText(text)
+            }
         }
     }
 }
