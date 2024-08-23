@@ -18,6 +18,10 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 
+
+
+
+
 val TAG: String = "NativeTextInput"
 
 internal class NativeTextInput(context: Context, id: Int, creationParams: Map<String?, Any?>, channel: MethodChannel) : PlatformView, MethodChannel.MethodCallHandler {
@@ -25,11 +29,14 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
     private val scaledDensity: Float
     private val editText: EditText
 
+
     override fun getView(): View {
         return editText
     }
 
     override fun dispose() {}
+
+
 
     init {
         this.context = context
@@ -41,13 +48,20 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
             editText.setTextCursorDrawable(R.drawable.edit_text_cursor)
         }
 
+
+
+
+
+
+
+
         if (creationParams.get("fontColor") != null) {
             val rgbMap = creationParams.get("fontColor") as Map<String, Float>
             val color = Color.argb(
-                    rgbMap.get("alpha") as Int,
-                    rgbMap.get("red") as Int,
-                    rgbMap.get("green") as Int,
-                    rgbMap.get("blue") as Int)
+                rgbMap.get("alpha") as Int,
+                rgbMap.get("red") as Int,
+                rgbMap.get("green") as Int,
+                rgbMap.get("blue") as Int)
             editText.setTextColor(color)
         }
 
@@ -62,7 +76,7 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
         }
 
         if (creationParams.get("fontWeight") != null &&
-                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             val fontWeight = creationParams.get("fontWeight") as String
             if (fontWeight == "FontWeight.w100") {
                 editText.typeface = Typeface.create(editText.typeface, 100, false)
@@ -108,10 +122,10 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
         if (creationParams.get("placeholderFontColor") != null) {
             val rgbMap = creationParams.get("placeholderFontColor") as Map<String, Float>
             val color = Color.argb(
-                    rgbMap.get("alpha") as Int,
-                    rgbMap.get("red") as Int,
-                    rgbMap.get("green") as Int,
-                    rgbMap.get("blue") as Int)
+                rgbMap.get("alpha") as Int,
+                rgbMap.get("red") as Int,
+                rgbMap.get("green") as Int,
+                rgbMap.get("blue") as Int)
             editText.setHintTextColor(color)
         }
 
@@ -168,15 +182,15 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
         if (creationParams.get("keyboardType") != null) {
             val keyboardType = creationParams.get("keyboardType") as String
             if (keyboardType == "KeyboardType.numbersAndPunctuation" ||
-                    keyboardType == "KeyboardType.numberPad" ||
-                    keyboardType == "KeyboardType.asciiCapableNumberPad") {
+                keyboardType == "KeyboardType.numberPad" ||
+                keyboardType == "KeyboardType.asciiCapableNumberPad") {
                 editText.inputType = InputType.TYPE_CLASS_NUMBER
             } else if (keyboardType == "KeyboardType.phonePad") {
                 editText.inputType = InputType.TYPE_CLASS_PHONE
             } else if (keyboardType == "KeyboardType.decimalPad") {
                 editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             } else if (keyboardType == "KeyboardType.url" ||
-                    keyboardType == "KeyboardType.webSearch") {
+                keyboardType == "KeyboardType.webSearch") {
                 editText.inputType = editText.inputType or InputType.TYPE_TEXT_VARIATION_URI
             } else if (keyboardType == "KeyboardType.emailAddress") {
                 editText.inputType = editText.inputType or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
@@ -184,20 +198,20 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
         } else if (creationParams.get("textContentType") != null) {
             val textContentType = creationParams.get("textContentType") as String
             if (textContentType == "TextContentType.username" ||
-                    textContentType == "TextContentType.givenName" ||
-                    textContentType == "TextContentType.middleName" ||
-                    textContentType == "TextContentType.familyName" ||
-                    textContentType == "TextContentType.nickname") {
+                textContentType == "TextContentType.givenName" ||
+                textContentType == "TextContentType.middleName" ||
+                textContentType == "TextContentType.familyName" ||
+                textContentType == "TextContentType.nickname") {
                 editText.inputType = editText.inputType or InputType.TYPE_TEXT_VARIATION_PERSON_NAME
             } else if (textContentType == "TextContentType.password" ||
-                    textContentType == "TextContentType.newPassword") {
+                textContentType == "TextContentType.newPassword") {
                 editText.inputType = editText.inputType or InputType.TYPE_TEXT_VARIATION_PASSWORD
             } else if (textContentType == "TextContentType.fullStreetAddress" ||
-                    textContentType == "TextContentType.streetAddressLine1" ||
-                    textContentType == "TextContentType.streetAddressLine2" ||
-                    textContentType == "TextContentType.addressCity" ||
-                    textContentType == "TextContentType.addressState" ||
-                    textContentType == "TextContentType.addressCityAndState") {
+                textContentType == "TextContentType.streetAddressLine1" ||
+                textContentType == "TextContentType.streetAddressLine2" ||
+                textContentType == "TextContentType.addressCity" ||
+                textContentType == "TextContentType.addressState" ||
+                textContentType == "TextContentType.addressCityAndState") {
                 editText.inputType = editText.inputType or InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS
             } else if (textContentType == "TextContentType.telephoneNumber") {
                 editText.inputType = InputType.TYPE_CLASS_PHONE
@@ -228,8 +242,26 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
         editText.doOnTextChanged { text, start, before, count ->
             Log.d(TAG, "doOnTextChanged:text:"+text.toString())
             Log.d(TAG, "doOnTextChanged:lineCount:"+editText.lineCount);
+
+
             channel.invokeMethod("inputValueChanged", mapOf("text" to text.toString()))
+//            // 如果进行了删除操作
+//            if (before > count) {
+//                // 重启输入法以更新预览文本
+//                android.util.Log.d(TAG, "doOnTextChanged: before > count")
+//                //增加一个延时
+//                val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                inputMethodManager.restartInput(editText)// 延时 50 毫秒
+//            }
+
+//                            val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                inputMethodManager.restartInput(editText)// 延时 50 毫秒
+
+
+
+            //add end
         }
+
 
         channel.setMethodCallHandler(this)
     }
@@ -266,11 +298,21 @@ internal class NativeTextInput(context: Context, id: Int, creationParams: Map<St
 //            val text = call.argument<String>("text")
 //            editText.setText(text)
 //        }
+
+
         else if (call.method == "setText") {
             val text = call.argument<String>("text")
             if (text != editText.text.toString()) {
                 editText.setText(text)
             }
+
+
+
         }
+
+
+
+
+
     }
 }
